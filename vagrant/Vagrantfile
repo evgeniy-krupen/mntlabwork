@@ -1,0 +1,40 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+	config.vm.define "vm1" do |vm1|
+	vm1.vm.box = "sbeliakou/centos-6.7-x86_64"
+	vm1.vm.hostname = "VM1"
+	vm1.vm.network "private_network", ip: "192.168.25.100"
+	vm1.vm.network "forwarded_port", guest: 81, host: 8181
+
+	vm1.vm.provider "virtualbox" do |machine|	
+		machine.cpus = 1
+		machine.memory = 512
+		machine.name = "httpd"
+		end
+	vm1.vm.provision "shell", path: "web.sh"
+	end
+
+
+	config.vm.define "vm2" do |vm2|
+        vm2.vm.box = "sbeliakou/centos-6.7-x86_64"
+        vm2.vm.hostname = "VM2"
+        vm2.vm.network "private_network", ip: "192.168.25.101"
+	vm2.vm.network "forwarded_port", guest: 82, host: 8282
+
+        vm2.vm.provider "virtualbox" do |machine|
+		machine.customize ["modifyvm", :id, "--cpuexecutioncap", "35"]
+                machine.memory = 1024
+                machine.name = "tomcat"
+                end
+	vm2.vm.provision "shell", path: "app.sh"
+        end
+
+	config.vm.synced_folder "sources/", "/home/sources",
+        owner:"vagrant", group:"vagrant",
+        create:true
+
+	config.vm.provision "shell", inline: "sudo yum install -y lynx nano"
+end
