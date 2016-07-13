@@ -1,4 +1,4 @@
-# Labwork "Troubleshouting" report
+# Labwork "Troubleshooting" report
 ## Report table
 |   |     Issue     |  How to find  | Time to find (min) | How to fix | Time to fix (min) |
 |:-:|:-------------:|:-------------:|:------------:|:----------:|:-----------:|
